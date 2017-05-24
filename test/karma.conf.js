@@ -63,10 +63,14 @@ module.exports = function(config) {
     logLevel: config.LOG_INFO,
     captureTimeout: 300000,
     browserNoActivityTimeout: 300000,
+    browserDisconnectTimeout: 300000,
+    browserDisconnectTolerance: 3,
 
     browserStack: {
       name: process.env.TRAVIS_BUILD_NUMBER + process.env.TRAVIS_BRANCH,
-      pollingTimeout: 30000
+      pollingTimeout: 30000,
+      captureTimeout: 600,
+      timeout: 600
     },
     customLaunchers: getCustomLaunchers(),
 
@@ -86,6 +90,15 @@ module.exports = function(config) {
         },
         { type: 'text-summary' }
       ]
+    },
+
+    // make QUnit show the UI in karma runs
+    client: {
+      clearContext: false,
+      qunit: {
+        showUI: true,
+        testTimeout: 5000
+      }
     }
   };
 
@@ -104,6 +117,7 @@ module.exports = function(config) {
         'chrome_bs',
         'firefox_bs',
         'safari_bs',
+        'edge_bs',
         'ie11_bs',
         'ie10_bs',
         'ie9_bs',
@@ -138,6 +152,13 @@ function getCustomLaunchers(){
       browser: 'safari',
       os: 'OS X',
       os_version: 'Yosemite'
+    },
+
+    edge_bs: {
+      base: 'BrowserStack',
+      browser: 'edge',
+      os: 'Windows',
+      os_version: '10'
     },
 
     ie11_bs: {
